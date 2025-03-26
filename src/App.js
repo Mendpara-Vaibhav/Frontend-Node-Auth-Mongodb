@@ -1,30 +1,53 @@
-import { useEffect, useState } from "react";
 import "./App.css";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { deleteUser, getUser } from "./components/UserApi";
+import Form from "./components/Form";
 
 function App() {
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
+  const [updateUser, setUpdateUser] = useState({});
+
   const getData = async () => {
-    await axios.get("http://localhost:8080/api/user").then((response) => {
-      // console.log(response.data.list);
-      setData(response.data.list);
-    });
+    const response = await getUser();
+    // console.log(response.data.list);
+    setData(response.data.list);
   };
+
+  // function to delete User
+  const handleDelete = async (id) => {
+    try {
+      const res = await deleteUser(id);
+      console.log(res);
+      if (res.status === 200) {
+        const newUpdatedUsers = data.filter((curUser) => {
+          return curUser.id !== id;
+        });
+        setData(newUpdatedUsers);
+      } else {
+        console.log("failed to delete the post:", res.status);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // handleUpdatePost
+  const handleUpdate = (user) => setUpdateUser(user);
+
   useEffect(() => {
     getData();
   }, []);
 
-  const handleDelete = (index) => {
-    if (window.confirm("Are you sure you want to delete")) {
-      setData(data.filter((v, i) => i !== index));
-    }
-  };
-
-  const handleEdit = (index) => {};
-
   return (
     <>
-      <h1>User List</h1>
+      <section className="section-form">
+        <Form
+          data={data}
+          setData={setData}
+          updateUser={updateUser}
+          setUpdateUser={setUpdateUser}
+        />
+      </section>
       <table border="1">
         <thead>
           <tr>
@@ -36,16 +59,23 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {data?.map((user, index) => (
+          {data?.map((user) => (
             <tr key={user._id}>
               <td>{user.username}</td>
               <td>{user.email}</td>
               <td>{user.password}</td>
               <td>
-                <button onClick={() => handleEdit(index)}>Edit</button>
+                <button className="btn-edit" onClick={() => handleUpdate(user)}>
+                  Edit
+                </button>
               </td>
               <td>
-                <button onClick={() => handleDelete(index)}>Delete</button>
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(user._id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
