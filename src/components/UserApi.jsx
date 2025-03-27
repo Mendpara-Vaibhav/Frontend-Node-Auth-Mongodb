@@ -15,11 +15,11 @@ export const deleteUser = (id) => {
 };
 
 // post method
-export const postData = (post) => {
-  return api.post("/add/user", post);
+export const postData = (user) => {
+  return api.post("/add/user", user);
 };
 
 //put method
-export const updateData = (id, post) => {
-  return api.put(`/update/user/${id}`, post);
+export const updateData = (id, user) => {
+  return api.put(`/update/user/${id}`, user);
 };

@@ -12,12 +12,13 @@ const Form = ({ data, setData, updateUser, setUpdateUser }) => {
 
   // get the updated Data and add into input field
   useEffect(() => {
-    updateUser &&
+    if (updateUser._id) {
       setAddData({
         username: updateUser.username || "",
         email: updateUser.email || "",
         password: updateUser.password || "",
       });
+    }
   }, [updateUser]);
 
   const handleInputChange = (e) => {
@@ -36,7 +37,7 @@ const Form = ({ data, setData, updateUser, setUpdateUser }) => {
     const res = await postData(addData);
     console.log("res", res);
 
-    if (res.status === 201) {
+    if (res.status === 200) {
       setData([...data, res.data]);
       setAddData({ username: "", email: "", password: "" });
     }
@@ -50,8 +51,8 @@ const Form = ({ data, setData, updateUser, setUpdateUser }) => {
       //   console.log("Update response:", res);
 
       if (res.status === 200) {
-        setData((prev) => {
-          return prev.map((curElem) => {
+        setData((user) => {
+          return user.map((curElem) => {
             return curElem._id === res.data._id ? res.data : curElem;
           });
         });
@@ -90,18 +91,20 @@ const Form = ({ data, setData, updateUser, setUpdateUser }) => {
           placeholder="Add name"
           value={addData.username}
           onChange={handleInputChange}
+          required
         />
       </div>
       <div>
         <label htmlFor="email"></label>
         <input
-          type="text"
+          type="email"
           autoComplete="off"
           placeholder="Add email"
           id="email"
           name="email"
           value={addData.email}
           onChange={handleInputChange}
+          required
         />
       </div>
       <div>
@@ -114,6 +117,7 @@ const Form = ({ data, setData, updateUser, setUpdateUser }) => {
           name="password"
           value={addData.password}
           onChange={handleInputChange}
+          required
         />
       </div>
       <button
