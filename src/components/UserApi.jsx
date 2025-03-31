@@ -23,3 +23,7 @@ export const postData = (user) => {
 export const updateData = (id, user) => {
   return api.put(`/update/user/${id}`, user);
 };
+
+export const postEmail = (user) => {
+  return api.post("/send-email", user);
+};

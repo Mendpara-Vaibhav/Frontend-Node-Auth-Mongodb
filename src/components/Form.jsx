@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { postData, updateData } from "./UserApi";
+import { postData, postEmail, updateData } from "./UserApi";
 
 const Form = ({ data, setData, updateUser, setUpdateUser }) => {
   const [addData, setAddData] = useState({
@@ -65,6 +65,25 @@ const Form = ({ data, setData, updateUser, setUpdateUser }) => {
     }
   };
 
+  // Function to send an email request to the backend
+  const sendEmail = async () => {
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+
+    try {
+      const response = await postEmail({ username, email });
+
+      if (response.status === 200) {
+        alert("Email sent successfully!");
+      } else {
+        alert(`Failed to send email: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("An error occurred while sending the email.");
+    }
+  };
+
   //   form submission
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -73,6 +92,7 @@ const Form = ({ data, setData, updateUser, setUpdateUser }) => {
     if (action === "Add") {
       //   console.log("Adding new user");
       addPostData();
+      sendEmail();
     } else if (action === "Edit") {
       //   console.log("Editing user");
       updatePostData();
