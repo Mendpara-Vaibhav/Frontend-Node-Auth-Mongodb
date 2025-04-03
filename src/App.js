@@ -1,8 +1,14 @@
 import "./App.css";
-import User from "./components/User";
+import Product from "./components/Product";
+// import User from "./components/User";
 
 function App() {
-  return <User />;
+  return (
+    <>
+      {/* <User /> */}
+      <Product />
+    </>
+  )
 }
 
 export default App;

@@ -27,3 +27,19 @@ export const updateData = (id, user) => {
 export const postEmail = (user) => {
   return api.post("/send-email", user);
 };
+
+export const getProduct = () => {
+  return api.get("/product");
+};
+
+export const deleteProduct = (id) => {
+  return api.delete(`/delete/product/${id}`);
+};
+
+export const postProduct = (product) => {
+  return api.post("/add/product", product);
+};
+
+export const updatesProduct = (id, product) => {
+  return api.put(`/update/product/${id}`, product);
+};
