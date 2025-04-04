@@ -28,14 +28,15 @@ function ProductForm({
   useEffect(() => {
     if (updateProduct._id) {
       setAddData({
-        name: updateProduct.name || "",
-        price: updateProduct.price || "",
-        qty: updateProduct.qty || "",
-        img: updateProduct.img || "",
-        shortdescription: updateProduct.shortdescription || "",
-        longdescription: updateProduct.longdescription || "",
-        color: updateProduct.color || "",
-        size: updateProduct.size || "",
+        name: updateProduct?.name || "",
+        price: updateProduct?.price || "",
+        qty: updateProduct?.qty || "",
+        img: updateProduct?.img || "",
+        shortdescription:
+          updateProduct?.productDetail[0]?.shortdescription || "",
+        longdescription: updateProduct?.productDetail[0]?.longdescription || "",
+        color: updateProduct?.productDetail[0]?.color || "",
+        size: updateProduct.productDetail[0]?.size || "",
       });
     } else {
       setAddData({

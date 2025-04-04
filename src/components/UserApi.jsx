@@ -28,8 +28,8 @@ export const postEmail = (user) => {
   return api.post("/send-email", user);
 };
 
-export const getProduct = () => {
-  return api.get("/product");
+export const getProduct = (page = 1, limit = 3) => {
+  return api.get(`/product?page=${page}&limit=${limit}`);
 };
 
 export const deleteProduct = (id) => {
@@ -42,4 +42,8 @@ export const postProduct = (product) => {
 
 export const updatesProduct = (id, product) => {
   return api.put(`/update/product/${id}`, product);
+};
+
+export const getProductDetail = (id) => {
+  return api.get(`/product/${id}`);
 };
