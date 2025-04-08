@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { deleteProduct, getProduct, getProductDetail } from "./UserApi";
 import ProductForm from "./ProductForm";
 import Table from "react-bootstrap/Table";
@@ -15,12 +15,12 @@ const Product = () => {
     setShow(true);
   };
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const res = await getProduct(page, 3);
     // console.log(res.data.list);
     setData(res.data.list);
     setTotalPages(res.data.totalPages);
-  };
+  }, [page]);
 
   const handleDelete = async (id) => {
     try {
@@ -53,7 +53,7 @@ const Product = () => {
 
   useEffect(() => {
     getData();
-  }, [data]);
+  }, [getData]);
 
   return (
     <>
@@ -65,6 +65,7 @@ const Product = () => {
         show={show}
         handleShow={handleShow}
         handleClose={handleClose}
+        getData={getData}
       />
       <Table bordered variant="info">
         <thead>
@@ -126,13 +127,40 @@ const Product = () => {
           margin: "1rem 0",
         }}
       >
-        <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
+        <button
+          className="btn-edit"
+          disabled={page <= 1}
+          onClick={() => setPage(page - 1)}
+        >
           Prev
         </button>
-        <span>
+
+        {/* <span>
           Page {page} of {totalPages}
-        </span>
-        <button disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
+        </span> */}
+
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i + 1}
+            onClick={() => setPage(i + 1)}
+            style={{
+              fontWeight: page === i + 1 ? "bold" : "normal",
+              backgroundColor: page === i + 1 ? "#0d6efd" : "#fff",
+              color: page === i + 1 ? "#fff" : "#000",
+              border: "1px solid #ccc",
+              padding: "5px 15px",
+              borderRadius: "4px",
+            }}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          className="btn-edit"
+          disabled={page >= totalPages}
+          onClick={() => setPage(page + 1)}
+        >
           Next
         </button>
       </div>

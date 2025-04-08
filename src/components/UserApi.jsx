@@ -36,12 +36,12 @@ export const deleteProduct = (id) => {
   return api.delete(`/delete/product/${id}`);
 };
 
-export const postProduct = (product) => {
-  return api.post("/add/product", product);
+export const postProduct = (formData) => {
+  return api.post("/add/product", formData);
 };
 
-export const updatesProduct = (id, product) => {
-  return api.put(`/update/product/${id}`, product);
+export const updatesProduct = (id, formData) => {
+  return api.put(`/update/product/${id}`, formData);
 };
 
 export const getProductDetail = (id) => {
