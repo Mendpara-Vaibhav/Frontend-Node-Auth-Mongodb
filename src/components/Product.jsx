@@ -58,8 +58,6 @@ const Product = () => {
   return (
     <>
       <ProductForm
-        data={data}
-        setData={setData}
         updateProduct={updateProduct}
         setUpdateProduct={setUpdateProduct}
         show={show}

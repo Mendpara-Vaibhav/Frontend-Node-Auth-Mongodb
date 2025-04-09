@@ -6,8 +6,6 @@ import Modal from "react-bootstrap/Modal";
 import { postProduct, updatesProduct } from "./UserApi";
 
 function ProductForm({
-  data,
-  setData,
   updateProduct,
   setUpdateProduct,
   show,
@@ -91,22 +89,9 @@ function ProductForm({
     if (updateProduct._id) {
       res = await updatesProduct(updateProduct._id, formData);
       console.log("update res:", res);
-
-      // if (res.status === 200) {
-      //   setData((prevData) =>
-      //     prevData.map((curElem) =>
-      //       curElem._id === res.data._id ? res.data : curElem
-      //     )
-      //   );
-      //   setUpdateProduct({});
-      // }
     } else {
       res = await postProduct(formData);
       console.log("add res:", res);
-
-      // if (res.status === 200) {
-      //   setData([...data, res.data]);
-      // }
     }
 
     if (res.status === 200) {
@@ -125,8 +110,6 @@ function ProductForm({
         size: "",
       });
     }
-    // getData();
-    // handleClose();
   };
 
   return (
@@ -201,7 +184,6 @@ function ProductForm({
                 onChange={handleInputImages}
                 multiple
                 accept="image/*"
-                required
               />
             </Form.Group>
 
@@ -211,8 +193,9 @@ function ProductForm({
                 addData.images.map((file, index) => {
                   const src =
                     typeof file === "string"
-                      ? `http://localhost:8080/${file}`
+                      ? `http://localhost:8080/${file}` // or your deployed base URL
                       : URL.createObjectURL(file);
+
                   return (
                     <img
                       key={index}
