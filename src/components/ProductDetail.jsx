@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getProductDetail } from "./UserApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Container, Row, Col, Card } from "react-bootstrap";
+import { Button, Container, Row, Col, Card, Carousel } from "react-bootstrap";
 
 const ProductDetail = () => {
   const [productDetail, setProductDetail] = useState();
@@ -64,23 +64,26 @@ const ProductDetail = () => {
               </Button>
             </Col>
           </Row>
+
           <hr />
-          <Row>
-            {productDetail?.product?.images.map((image, index) => (
-              <Col key={index}>
-                <img
-                  src={`http://localhost:8080/${image}`}
-                  alt={`${productDetail?.product?.name} - ${index}`}
-                  style={{
-                    maxHeight: "300px",
-                    maxWidth: "300px",
-                    objectFit: "fill",
-                  }}
-                  className="img-fluid rounded"
-                />
-              </Col>
-            ))}
-          </Row>
+
+          {productDetail?.product?.images?.length > 0 && (
+            <Carousel fade variant="dark" interval={2000} pauseOnHover>
+              {productDetail.product.images.map((image, index) => (
+                <Carousel.Item key={index}>
+                  <img
+                    className="d-block w-100"
+                    src={`http://localhost:8080/${image}`}
+                    alt={`${productDetail.product.name} - ${index}`}
+                    style={{
+                      maxHeight: "400px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Carousel.Item>
+              ))}
+            </Carousel>
+          )}
         </Card>
       </Container>
     </>
