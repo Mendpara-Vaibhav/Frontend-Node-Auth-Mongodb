@@ -47,3 +47,11 @@ export const updatesProduct = (id, formData) => {
 export const getProductDetail = (id) => {
   return api.get(`/product/${id}`);
 };
+
+export const userRegister = (user) => {
+  return api.post("/auth/signup", user);
+};
+
+export const userLogin = (info) => {
+  return api.post("/auth/signin", info);
+};

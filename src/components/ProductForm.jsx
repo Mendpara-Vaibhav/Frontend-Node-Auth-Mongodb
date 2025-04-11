@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { postProduct, updatesProduct } from "./UserApi";
+import { useNavigate } from "react-router-dom";
 
 function ProductForm({
   updateProduct,
@@ -24,6 +25,7 @@ function ProductForm({
     color: "",
     size: "",
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (updateProduct._id) {
@@ -65,6 +67,11 @@ function ProductForm({
   const handleInputImages = (e) => {
     const files = Array.from(e.target.files);
     setAddData((prev) => ({ ...prev, images: [...prev.images, ...files] }));
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   const handleFormSubmit = async (e) => {
@@ -116,6 +123,10 @@ function ProductForm({
     <>
       <Button variant="primary" size="lg" onClick={handleShow}>
         Add Product
+      </Button>
+
+      <Button onClick={handleLogout} variant="danger">
+        Logout
       </Button>
 
       <Modal show={show} onHide={handleClose}>

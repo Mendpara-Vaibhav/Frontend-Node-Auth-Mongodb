@@ -27,7 +27,6 @@ const Product = () => {
       const res = await deleteProduct(id);
       console.log(res);
       if (res.status === 200) {
-        // setData(data.filter((curProduct) => curProduct._id !== id));
         getData();
       } else {
         console.log("Failed to delete the post:", res.status);
@@ -40,7 +39,7 @@ const Product = () => {
   const handleEdit = async (id) => {
     const res = await getProductDetail(id);
     const product = res.data.product;
-    console.log(product);
+    console.log("edit product:", product);
     // console.log("edit product", id);
     setUpdateProduct(product);
     setShow(true);
@@ -65,6 +64,7 @@ const Product = () => {
         handleClose={handleClose}
         getData={getData}
       />
+
       <Table bordered variant="info">
         <thead>
           <tr>
