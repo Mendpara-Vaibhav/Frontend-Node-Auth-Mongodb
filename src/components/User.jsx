@@ -46,9 +46,9 @@ const User = () => {
           setUpdateUser={setUpdateUser}
         />
       </section>
-      <table border="1">
+      <table className="table table-bordered table-hover ">
         <thead>
-          <tr>
+          <tr className="table-primary">
             <th>Username</th>
             <th>Email</th>
             <th>Password</th>
@@ -58,7 +58,7 @@ const User = () => {
         </thead>
         <tbody>
           {data?.map((user) => (
-            <tr key={user._id}>
+            <tr className="table-info" key={user._id}>
               <td>{user.username}</td>
               <td>{user.email}</td>
               <td>{user.password}</td>
