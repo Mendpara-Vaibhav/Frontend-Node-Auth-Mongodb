@@ -71,7 +71,7 @@ function ProductForm({
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/");
   };
 
   const handleFormSubmit = async (e) => {

@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { getProduct } from "./UserApi";
 import { Card, Button, Container, Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Header from "./Header";
 
 const ProductCardList = () => {
   const [card, setCard] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
   const [total, setTotal] = useState();
 
   const getList = useCallback(async () => {
     const res = await getProduct(page, total);
     const list = res.data.list;
-    console.log(list);
+    // console.log(list);
     setCard(list);
     setTotal(res.data.total);
   }, [page, total]);
@@ -21,6 +23,8 @@ const ProductCardList = () => {
 
   return (
     <>
+      <Header />
+      <h1 className="text-center p-2 m-2 ">Product List</h1>
       <Container className="my-4">
         <Row xs={1} md={3} className="g-4">
           {card.map((product, index) => (
@@ -38,7 +42,14 @@ const ProductCardList = () => {
                     <strong>Price:</strong> ${product?.price} <br />
                     <strong>Quantity:</strong> {product?.qty}
                   </Card.Text>
-                  <Button variant="primary">View Details</Button>
+                  <Button variant="primary">
+                    <Link
+                      to={`/productDetail/${product._id}`}
+                      className="text-white"
+                    >
+                      View Details
+                    </Link>
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
