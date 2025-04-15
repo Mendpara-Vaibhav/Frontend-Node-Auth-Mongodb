@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart, decrementQty, incrementQty } from "./cartSlice";
 import { Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { userOrder } from "./UserApi";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const cartItems = useSelector((store) => store.cart.items);
@@ -18,6 +20,35 @@ const Cart = () => {
     navigate(-1);
   };
 
+  const handlePay = async () => {
+    try {
+      if (cartItems.length === 0) {
+        toast.error("Cart is empty");
+        return;
+      }
+
+      const products = cartItems.map((item) => ({
+        productId: item.id,
+        qty: item.qty,
+        totalPrice: item.qty * item.price,
+      }));
+
+      const totalAmount = products.reduce(
+        (sum, item) => sum + item.totalPrice,
+        0
+      );
+
+      const response = await userOrder({ products, totalAmount });
+      console.log("Order API response:", response.data);
+      toast.success("Order placed successfully!");
+
+      dispatch(clearCart());
+    } catch (err) {
+      console.error("Error placing order:", err);
+      toast.error("Failed to place order");
+    }
+  };
+
   return (
     <>
       <div className="text-center">
@@ -25,8 +56,11 @@ const Cart = () => {
         <Button className="me-3" variant="danger" onClick={handleClearCart}>
           Clear Cart
         </Button>
-        <Button variant="success" onClick={handleGoBack}>
+        <Button className="me-3" variant="success" onClick={handleGoBack}>
           Go Back
+        </Button>
+        <Button variant="warning" onClick={handlePay}>
+          Pay
         </Button>
       </div>
 

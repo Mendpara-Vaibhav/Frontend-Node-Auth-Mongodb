@@ -55,3 +55,7 @@ export const userRegister = (user) => {
 export const userLogin = (info) => {
   return api.post("/auth/signin", info);
 };
+
+export const userOrder = ({ products, totalAmount }) => {
+  return api.post("/order", { products, totalAmount });
+};
