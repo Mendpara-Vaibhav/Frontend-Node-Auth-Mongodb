@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart, decrementQty, incrementQty } from "./cartSlice";
 import { Button, Container, Row, Col, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { userOrder } from "./UserApi";
+import { createRazorpayOrder, userOrder } from "./UserApi";
 import { toast } from "react-toastify";
 
 const Cart = () => {
@@ -11,6 +11,7 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const MAX_RAZORPAY_LIMIT = 500000;
 
   const handleClearCart = () => {
     dispatch(clearCart());
@@ -20,7 +21,7 @@ const Cart = () => {
     navigate(-1);
   };
 
-  const handlePay = async () => {
+  const handleRazorpayPayment = async () => {
     try {
       if (cartItems.length === 0) {
         toast.error("Cart is empty");
@@ -38,14 +39,64 @@ const Cart = () => {
         0
       );
 
-      const response = await userOrder({ products, totalAmount });
-      console.log("Order API response:", response.data);
-      toast.success("Order placed successfully!");
+      if (totalAmount > MAX_RAZORPAY_LIMIT) {
+        toast.error(
+          "Amount exceeds ₹5,00,000 – cannot proceed with Razorpay payment."
+        );
+        return;
+      }
 
-      dispatch(clearCart());
+      // console.log("Amount to send to Razorpay:", totalAmount);
+      const razorpayResponse = await createRazorpayOrder(totalAmount * 100);
+      console.log("Razorpay API Response:", razorpayResponse.data);
+
+      const { id: order_id, amount, currency } = razorpayResponse.data;
+
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount,
+        currency,
+        order_id,
+        name: "Shop Now",
+        description: "Test Transaction",
+        handler: async function (response) {
+          // console.log("Payment successful:", response);
+          const paymentInfo = {
+            id: response.razorpay_payment_id,
+            order_id: response.razorpay_order_id,
+            signature: response.razorpay_signature,
+            amount,
+            currency,
+            status: "created",
+            receipt: order_id,
+            createdAt: new Date().toISOString(),
+          };
+
+          // Save order to DB after successful payment
+          const confirmOrder = await userOrder({
+            products,
+            totalAmount,
+            paymentInfo,
+          });
+          console.log("Order API response:", confirmOrder.data);
+          toast.success("Order placed successfully!");
+          dispatch(clearCart());
+        },
+        prefill: {
+          name: "Test User",
+          email: "test@example.com",
+          contact: "9999999999",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
-      console.error("Error placing order:", err);
-      toast.error("Failed to place order");
+      console.error("Payment error:", err);
+      toast.error("Payment failed");
     }
   };
 
@@ -59,7 +110,7 @@ const Cart = () => {
         <Button className="me-3" variant="success" onClick={handleGoBack}>
           Go Back
         </Button>
-        <Button variant="warning" onClick={handlePay}>
+        <Button variant="warning" onClick={handleRazorpayPayment}>
           Pay
         </Button>
       </div>

@@ -56,6 +56,10 @@ export const userLogin = (info) => {
   return api.post("/auth/signin", info);
 };
 
-export const userOrder = ({ products, totalAmount }) => {
-  return api.post("/order", { products, totalAmount });
+export const createRazorpayOrder = (amount) => {
+  return api.post("/create-razorpay-order", { amount });
+};
+
+export const userOrder = ({ products, totalAmount, paymentInfo }) => {
+  return api.post("/order", { products, totalAmount, paymentInfo });
 };

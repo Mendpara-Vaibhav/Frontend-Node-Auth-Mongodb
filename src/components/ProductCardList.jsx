@@ -39,7 +39,7 @@ const ProductCardList = () => {
                 <Card.Body>
                   <Card.Title className="fs-3">{product?.name}</Card.Title>
                   <Card.Text className="text-black fs-5">
-                    <strong>Price:</strong> ${product?.price} <br />
+                    <strong>Price:</strong> ₹{product?.price} <br />
                     <strong>Quantity:</strong> {product?.qty}
                   </Card.Text>
                   <Button variant="primary">
